@@ -1,0 +1,9 @@
+/.tox/
+/coverage/
+/venv/
+__pycache__/
+/.coverage
+*.egg*
+*.pyc
+.DS_Store
+clients.json

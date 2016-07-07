@@ -1,0 +1,10 @@
+{
+  "generator-python-lib": {
+    "projectName": "td_exam_booker",
+    "fullName": "MingChan",
+    "email": "nick.ccm1122@gmail.com",
+    "githubName": "nickccm1122",
+    "ciProvider": "None",
+    "version": "1.7.0"
+  }
+}
