@@ -39,5 +39,5 @@ modify `./client.json`
 ```
 under the project directory
 ```
-. ./runs_script.sh
+. ./run_script.sh
 ```
