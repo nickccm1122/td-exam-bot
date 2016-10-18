@@ -28,6 +28,8 @@ class Attempt:
             if self.alive:
                 self.alive = self.processSencondPage()
             if self.alive:
+                self.alive = self.processWarningPage()
+            if self.alive:
                 self.alive = self.processThirdPage()
 
         print("** Server is Up! **")
@@ -88,6 +90,28 @@ class Attempt:
 
         # task 2: goto next page, rely on the class="redbutton"
         nextButton = driver.find_element_by_xpath('//a[@class="redbutton"]')
+        nextButton.click()
+
+        return True
+
+    def processWarningPage(self):
+
+        driver = self.driver
+        # Page 2:
+        # https://eapps2.td.gov.hk/repoes/checkclientconfig/warning.jsp
+        # task 1: wait the page to be loaded
+        try:
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.CLASS_NAME, "errorPanel"))
+            )
+        except:
+            driver.quit()
+            return False
+
+        print("[Start]: " + driver.current_url + "\n")
+
+        # task 2: goto next page, rely on the class="redbutton"
+        nextButton = driver.find_element_by_css_selector('input.actionBtnCom')
         nextButton.click()
 
         return True
