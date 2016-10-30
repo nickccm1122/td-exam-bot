@@ -27,8 +27,8 @@ class Attempt:
 
             if self.alive:
                 self.alive = self.processSencondPage()
-            if self.alive:
-                self.alive = self.processWarningPage()
+            # if self.alive:
+            #     self.alive = self.processWarningPage()
             if self.alive:
                 self.alive = self.processThirdPage()
 
