@@ -5,8 +5,10 @@ Class: Single Attempt of application
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
 import time
+# from PIL import Image
 
 
 class Attempt:
@@ -159,6 +161,17 @@ class Attempt:
             "window.scrollTo(0,document.body.scrollHeight);" +
             "document.getElementById('jcaptcha_response').focus();")
 
+        # captcha = driver.find_element_by_xpath('//*[@id="contentPanel"]/form/div[3]/div/table/tbody/tr[2]/td/div/table/tbody/tr[1]/td/img')
+        # location = element.location
+        # size = element.size
+        # im = Image.open(StringIO(base64.decodestring(driver.get_screensho‌​t_as_base64())))
+        # left = location['x']
+        # top = location['y']
+        # right = location['x'] + size['width']
+        # bottom = location['y'] + size['height']
+        # im = im.crop((left, top, right, bottom))
+        # im.save('screenshot.png')
+
         # Check if the captcha has been filled
         if not waitForInput():
             return False
@@ -264,8 +277,10 @@ class Attempt:
         # click on it if possible
 
         driver = self.driver
+        client = self.client
         timeslot = None
         nextMonth = None
+        testAreaCodeOption = None
 
         # check if the page is loaded
         try:
@@ -280,6 +295,31 @@ class Attempt:
         else:
             driver.switch_to_default_content()
             driver.switch_to_frame('main')
+
+        # If user are from kowloon, change to kowloon then
+        if client["district"] == 'kowloon':
+            # Try find the availale link and click it
+            try:
+                testAreaCodeOption = select = Select(driver.find_element_by_id('testAreaCode'))
+            except:
+                print(">> trouble selecting areaCode..\n")
+            else:
+                testAreaCodeOption.select_by_value('2')
+
+        # check if the page is loaded
+        try:
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, "/html"))
+            )
+            print("[Start]: Calendar page\n")
+        except:
+            print(">> Can't load calendar page\n")
+            driver.quit()
+            return False
+        else:
+            driver.switch_to_default_content()
+            driver.switch_to_frame('main')
+
 
         # Try find the availale link and click it
         try:
@@ -300,6 +340,35 @@ class Attempt:
                 print(">> Next Month is not available as well..\n")
             else:
                 nextMonth.click()
+
+                # Try find the availale link and click it
+                try:
+                    timeslot = driver.find_element_by_xpath(
+                        '//td[@class="inner-table-cell"]/a')
+                except:
+                    print(">> Couldn't find available timeslot in next month too..\n")
+                else:
+                    timeslot.click()
+
+
+        if timeslot is not None:
+            try:
+                WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located((By.XPATH, "/html"))
+                )
+                print("Almost there!!! Agree to print the booking\n")
+            except:
+                print(">> Can't load printing page\n")
+                # driver.quit()
+                return False
+            else:
+                # task 1: check agree radio
+                radioChoice = driver.find_element_by_xpath('//input[@name="agree"]')
+                radioChoice.click()
+                driver.find_element_by_xpath('//a[@class="redbutton"]').click()
+
+
+
 
         print(">> I have done my job!\n")
         print("< Input 'q' to quit the program >")
