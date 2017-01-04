@@ -31,7 +31,8 @@ modify `./client.json`
             "b-month": "8",
             "b-date": "14",
             "mobile": "<mobile>",
-            "lens": "n"
+            "lens": "n",
+            "district": "kowloon/hk"
         },
         ...]
 }
